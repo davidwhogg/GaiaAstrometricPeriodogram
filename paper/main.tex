@@ -106,10 +106,10 @@ If you carry forward the mathematics, and apply either useful trig identities, o
 \end{align}
 where really we take the real part of this expression,
 and $Z_+, Z_-$ are complex coefficients.
-That is, we want to know the complex coefficients; the ratio of imaginary to real parts of the coefficients will relate
+You might ask why we have two amplitudes $Z_+, Z_-$ and not just one; it's because these amplitudes parameterize not just the amplitude and phase of the oscillating signal; they also parameterize a polarization tensor on the sky.
+That is, we want to know the complex coefficients; the magnitudes of the coefficients will relate to the semi-amplitudes $|\vec{a}|,|\vec{b}|$; the ratio of imaginary to real parts of the coefficients will relate
 to the offsets $\phi_0,\psi_0$.
-
-The complex coefficients are related to the vectors and angles and phases as follows:
+In detail, the complex coefficients are related to the vectors and angles and phases as follows:
 \begin{align}
     |\vec{a}| &= |Z_+|+|Z_-| \\
     |\vec{b}| &= ||Z_+|-|Z_-|| \\
@@ -117,7 +117,6 @@ The complex coefficients are related to the vectors and angles and phases as fol
     \psi_0 &= +\tfrac{1}{2}\,\bigl[\arg Z_- - \arg Z_+\bigr] ~,
 \end{align}
 where $\arg Z \equiv \operatorname{atan2}(\operatorname{Im} Z, \operatorname{Re} Z)$ is the complex phase.
-You might ask why we have two amplitudes $Z_+, Z_-$ and not just one; it's because these amplitudes parameterize not just the amplitude and phase of the oscillating signal; they also parameterize a polarization tensor on the sky.
 
 The simplest (and slowest) version of the method we are proposing here is to use \eqref{eq:zs} to build a design matrix $X$ and then do
 \begin{align}
