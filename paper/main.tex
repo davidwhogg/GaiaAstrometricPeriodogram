@@ -22,8 +22,8 @@
 \newcommand{\hoggsay}[1]{{\color{blue} (Hogg says: #1)}}
 
 \title{\bfseries A custom periodogram for \textsl{Gaia} astrometric residuals.}
-\author{Hogg for Ramirez~Delgado and friends}
-\date{\textit{draft version ---} 2026 October 18}
+\author{Hogg, Casey for Ramirez~Delgado and friends}
+\date{\textit{draft version ---} 2026 October 20}
 \begin{document}
 \maketitle
 
@@ -52,6 +52,7 @@ Importantly the times $t_n$ will be some kind of (Solar System) barycentric time
 
 Except for certain weird modes, Gaia scans at a constant angular scan rate $\Omega$ such that the astrometric residual $y_n$ corresponding to timing residual $\Delta_n$ is just $y_n = \Omega\,\Delta_n$.
 In what follows, we will mainly work with $y_n$ not $\Delta_n$ because we care most about quantities on the sky (not quantities on the spacecraft).
+% ARC: I think Gaia defines psi north towards east
 Most importantly for what follows, at each observation time $t_n$, the spacecraft is scanning the sky at scan angle $\psi_n$ in the plane of the sky, defined relative to some fiducial two-dimensional on-sky coordinate system.
 
 \paragraph{Circular orbits projected on the sky}
@@ -105,24 +106,39 @@ If you carry forward the mathematics, and apply either useful trig identities, o
 \end{align}
 where really we take the real part of this expression,
 and $Z_+, Z_-$ are complex coefficients.
-That is, we want to know the complex coefficients; the ratio of imaginary to real parts of the coefficients will relate
-to the offsets $\phi_0,\psi_0$.
-
-The complex coefficients are related to the vectors and angles and phases as follows:
-\begin{align}
-    |\vec{a}| &= foo \\
-    |\vec{b}| &= sup \\
-    \phi_0 &= \arctan(bar) \\
-    \psi_0 &= \arctan(duh) ~.
-\end{align}
 You might ask why we have two amplitudes $Z_+, Z_-$ and not just one; it's because these amplitudes parameterize not just the amplitude and phase of the oscillating signal; they also parameterize a polarization tensor on the sky.
+That is, we want to know the complex coefficients; the magnitudes of the coefficients will relate to the semi-amplitudes $|\vec{a}|,|\vec{b}|$; the ratio of imaginary to real parts of the coefficients will relate
+to the offsets $\phi_0,\psi_0$.
+In detail, the complex coefficients are related to the vectors and angles and phases as follows:
+\begin{align}
+    |\vec{a}| &= |Z_+|+|Z_-| \\
+    |\vec{b}| &= ||Z_+|-|Z_-|| \\
+    \phi_0 &= -\tfrac{1}{2}\,\bigl[\arg Z_+ + \arg Z_-\bigr] \\
+    \psi_0 &= +\tfrac{1}{2}\,\bigl[\arg Z_- - \arg Z_+\bigr] ~,
+\end{align}
+where $\arg Z \equiv \operatorname{atan2}(\operatorname{Im} Z, \operatorname{Re} Z)$ is the complex phase.
 
 The simplest (and slowest) version of the method we are proposing here is to use \eqref{eq:zs} to build a design matrix $X$ and then do
 \begin{align}
-    \begin{bmatrix} Z_+ \\ Z_- \end{bmatrix} &= [X^\top\,C^{-1}\,X]^{-1}\,X^\top\,C^{-1}\,Y ~,
+    \hat{\beta} &= [X^\top\,C^{-1}\,X]^{-1}\,X^\top\,C^{-1}\,Y ~,
 \end{align}
-where $X$ is \hoggsay{what now?}
-Note that both the design matrix $X$ and the output $[Z_+,Z_-]$ are complex in the most naive implementation of this.
+where
+\begin{align}
+    \beta &\equiv \begin{bmatrix} c_+ & s_+ & c_- & s_- \end{bmatrix}^\top ~,
+    \quad\mbox{with}\quad Z_\pm = c_\pm - i\,s_\pm ~,
+\end{align}
+and the design matrix is shape $N \times 4$ with entries
+\begin{align}
+    X_n &= \begin{bmatrix}
+        \cos(\omega\,t_n + \psi_n) &
+        \sin(\omega\,t_n + \psi_n) &
+        \cos(\omega\,t_n - \psi_n) &
+        \sin(\omega\,t_n - \psi_n)
+    \end{bmatrix} ~,
+\end{align}
+This is the pure-real implementation of this (4 real parameters);
+in the most naive complex implementation (2 complex parameters)
+both the design matrix $X$ and the output $[Z_+,Z_-]$ are complex in the most naive implementation of this.
 
 \hoggsay{A more robust method is to do what now?}
 
@@ -136,6 +152,7 @@ Note that both the design matrix $X$ and the output $[Z_+,Z_-]$ are complex in t
 \section{Discussion}\label{sec:discussion}
 
 \paragraph{Acknowledgments}
-It is a pleasure to thank Andy Casey (Monash, Flatiron) for help with early versions of this.
+It is a pleasure to thank Adrian Price-Whelan (Flatiron) and \hoggsay{other people}
+for help with all this.
 
 \end{document}
